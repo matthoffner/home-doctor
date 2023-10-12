@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Doctor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #textbox {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        .message {
+            margin: 10px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background-color: #e5e5e5;
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: #c8dbf0;
+        }
+
+        #send-button {
+            margin-top: 20px;
+        }
+
+        #upload-section {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Home Doctor</h1>
+
+<div class="container">
+    <div id="upload-section">
+        <input type="file" id="image-upload" accept="image/*">
+        <button id="process-image">Upload & Process Image</button>
+    </div>
+    
+    <div id="loader" style="display: none;">Processing...</div>
+
+    <div id="textbox"></div>
+
+    <input type="text" class="user-input" placeholder="Type a message...">
+    <button id="send-button">Send</button>
+</div>
+
+<script type="module" src="chat.js"></script>
+
+</body>
+</html>
