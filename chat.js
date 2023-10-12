@@ -1,6 +1,6 @@
 // chat.js
 
-export const initializeChat = () => {
+export const initializeChat = (initialPrompt) => {
     const APIURL = 'https://api.openai.com/v1/chat/completions';
     let conversation = [
         {
@@ -8,6 +8,10 @@ export const initializeChat = () => {
             content: 'How are you today? Please ask me anything',
         },
     ];
+
+    if (initialPrompt) {
+        sendButtonNode.click(); // Simulate a click to send the initialPrompt to the chatbot
+    }
 
     const sendBotMessage = async (msg, APIKEY) => {
         let message = {
