@@ -2,6 +2,15 @@
 
 export const initializeChat = (initialPrompt) => {
     const APIURL = 'https://api.openai.com/v1/chat/completions';
+    const loaderNode = document.getElementById('loader');
+    const textBoxNode = document.getElementById('textbox');
+    const APIKEY = new URLSearchParams(window.location.search).get('apiKey'); // Fetching the API key from the query parameters
+
+    if (!APIKEY) {
+        showChat('error', 'Missing API Key in the URL');
+        return;
+    }
+
     let conversation = [
         {
             role: 'system',
@@ -10,20 +19,28 @@ export const initializeChat = (initialPrompt) => {
     ];
 
     if (initialPrompt) {
-        sendButtonNode.click(); // Simulate a click to send the initialPrompt to the chatbot
+        sendBotMessage(initialPrompt);
     }
 
-    const sendBotMessage = async (msg, APIKEY) => {
+    const showChat = (type, message) => {
+        let chatContainerNode = document.createElement('div');
+        chatContainerNode.classList.add('message', type);
+        let chatText = document.createElement('p');
+        chatText.innerHTML = message;
+        chatContainerNode.appendChild(chatText);
+
+        textBoxNode.appendChild(chatContainerNode);
+        textBoxNode.scrollTop = textBoxNode.scrollHeight;
+    };
+
+    const sendBotMessage = async (msg) => {
+        loaderNode.style.display = 'block';  // Display loader during processing
+        
         let message = {
             role: 'user',
             content: msg,
         };
         conversation.push(message);
-
-        let data = {
-            model: 'gpt-3.5-turbo',
-            messages: conversation,
-        };
 
         try {
             let chatResponse = await fetch(APIURL, {
@@ -32,7 +49,10 @@ export const initializeChat = (initialPrompt) => {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${APIKEY}`,
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: conversation,
+                }),
             });
 
             let responseData = await chatResponse.json();
@@ -47,20 +67,33 @@ export const initializeChat = (initialPrompt) => {
         } catch (err) {
             console.log(err);
             showChat('error', `The following error occurred: ${err}`);
+        } finally {
+            loaderNode.style.display = 'none';  // Hide loader after processing
         }
     };
 
-    const showChat = (type, message) => {
-        let textBoxNode = document.getElementById('textbox');
-        let chatContainerNode = document.createElement('div');
-        chatContainerNode.classList.add('message', type);
-        let chatText = document.createElement('p');
-        chatText.innerHTML = message;
-        chatContainerNode.appendChild(chatText);
+    const processImageBtn = document.getElementById("process-image");
+    const imageUpload = document.getElementById("image-upload");
+    
+    processImageBtn.addEventListener('click', async () => {
+        if (imageUpload.files.length > 0) {
+            loaderNode.style.display = 'block'; // show the loader
 
-        textBoxNode.appendChild(chatContainerNode);
-        textBoxNode.scrollTop = textBoxNode.scrollHeight;
-    };
+            const image = imageUpload.files[0];
+            const reader = new FileReader();
+
+            reader.readAsDataURL(image);
+            reader.onload = () => {
+                const base64Image = reader.result.split(',')[1];
+                // Now, we send this base64 encoded image to your worker for processing
+                // After processing, the worker will send back the extracted text, which can then be used as the initial prompt for the chatbot.
+                worker.postMessage({
+                    task: 'image-to-text',
+                    image: base64Image
+                });
+            };
+        }
+    });
 
     let sendButtonNode = document.getElementById('send-button');
     let userInputNode = document.querySelector('.user-input');
@@ -68,29 +101,9 @@ export const initializeChat = (initialPrompt) => {
     sendButtonNode.addEventListener('click', async () => {
         let userMessage = userInputNode.value.trim();
         userInputNode.value = '';
-        if (userMessage === '') {
-            return;
-        } else {
-            try {
-                let response = await fetch('https://openai-chatbot-server.onrender.com/api/key');
-                if (!response.ok) {
-                    throw new Error('Error occurred while fetching the API key');
-                }
-      
-                let keyData = await response.json();
-                let APIKEY = keyData.apiKey;
-      
-                if (!APIKEY) {
-                    showChat('error', 'Missing API Key');
-                    return;
-                }
-      
-                showChat('sent', userMessage);
-                await sendBotMessage(userMessage, APIKEY);
-            } catch (err) {
-                showChat('error', 'Failed to fetch from API');
-                console.log(err);
-            }
+        if (userMessage !== '') {
+            showChat('sent', userMessage);
+            await sendBotMessage(userMessage);
         }
     });
 
