@@ -4,7 +4,12 @@
   "description": "A simple web application allowing users to upload an image which is then processed and converted to text. The output is used as an input to an interactive chatbot.",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.3.2"
   },
   "author": "",
   "license": "ISC",
