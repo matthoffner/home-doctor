@@ -3,6 +3,25 @@ import { initializeChat } from './chat.js';
 let textBoxNode;
 let loaderNode;
 
+function getImageDataFromImage(original) {
+    // Helper function to get image data from image element
+    const canvas = document.createElement('canvas');
+    canvas.width = original.naturalWidth;
+    canvas.height = original.naturalHeight;
+  
+    const ctx = canvas.getContext('2d');
+  
+    // Optional: You can adjust these canvas context properties to tweak the rendering quality
+    // ctx.patternQuality = 'bilinear';
+    // ctx.quality = 'bilinear';
+    // ctx.antialias = 'default';
+    // ctx.imageSmoothingQuality = 'high';
+  
+    ctx.drawImage(original, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL();
+  }
+  
+
 document.addEventListener('DOMContentLoaded', () => {
     textBoxNode = document.getElementById('textbox');
     loaderNode = document.getElementById('loader');
@@ -28,20 +47,26 @@ document.addEventListener('DOMContentLoaded', () => {
     processImageBtn.addEventListener('click', async () => {
         if (imageUpload.files.length > 0) {
             loaderNode.style.display = 'block'; // show loader
-
+    
             const image = imageUpload.files[0];
             const reader = new FileReader();
-
-            reader.readAsDataURL(image);
+    
             reader.onload = () => {
-                const base64Image = reader.result.split(',')[1];
-                worker.postMessage({
-                    task: 'image-to-text',
-                    image: base64Image
-                });
+                const imageElement = new Image();
+                imageElement.onload = () => {
+                    const base64Image = getImageDataFromImage(imageElement).split(',')[1];
+                    worker.postMessage({
+                        task: 'image-to-text',
+                        image: base64Image
+                    });
+                };
+                imageElement.src = reader.result;
             };
+    
+            reader.readAsDataURL(image);
         }
     });
+    
 
     initializeChat();
 });
