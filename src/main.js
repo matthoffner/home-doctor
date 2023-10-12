@@ -47,7 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const generatedText = extractedText[0].generated_text
             textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${generatedText}</div>`;
             loaderNode.style.display = 'none'; // hide the loader
-            initializeChat(`I've uploaded an image, I know you can't see but here is the image caption result: ${generatedText}, reply back with a helpful suggestion and include the caption result in your response.`);
+            if (generatedText) {
+                initializeChat(`I've uploaded an image, I know you can't see but here is the image caption result: ${generatedText}, reply back with a helpful response from the caption I provided`);
+            }
         }
     };
 
