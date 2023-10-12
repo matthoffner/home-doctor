@@ -29,10 +29,6 @@ export const initializeChat = (initialPrompt) => {
         },
     ];
 
-    if (initialPrompt) {
-        sendBotMessage(initialPrompt);
-    }
-
     const sendBotMessage = async (msg) => {
         loaderNode.style.display = 'block';  // Display loader during processing
         
@@ -71,6 +67,10 @@ export const initializeChat = (initialPrompt) => {
             loaderNode.style.display = 'none';  // Hide loader after processing
         }
     };
+
+    if (initialPrompt) {
+        sendBotMessage(initialPrompt);
+    }
 
     let sendButtonNode = document.getElementById('send-button');
     let userInputNode = document.querySelector('.user-input');
