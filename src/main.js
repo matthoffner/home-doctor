@@ -44,9 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.type === 'result' && data.task === 'image-to-text') {
             const extractedText = data.data;
-            textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${extractedText[0].generated_text}</div>`;
+            const generatedText = extractedText[0].generated_text
+            textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${generatedText}</div>`;
             loaderNode.style.display = 'none'; // hide the loader
-            initializeChat(`I've uploaded this image, here is the image caption result so you know what it is: ${extractedText[0].generated_text}, reply back with a helpful suggestion and include the caption result in your response.`);
+            initializeChat(`I've uploaded an image, I know you can't see but here is the image caption result: ${generatedText}, reply back with a helpful suggestion and include the caption result in your response.`);
         }
     };
 
