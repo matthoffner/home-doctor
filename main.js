@@ -1,25 +1,27 @@
 import { initializeChat } from './chat.js';
 
-const worker = new Worker('./worker.js', { type: 'module' });
-
-let textBoxNode = document.getElementById('textbox');
-let loaderNode = document.getElementById('loader');
-
-worker.onmessage = (event) => {
-    const data = event.data;
-
-    if (data.type === 'result' && data.task === 'image-to-text') {
-        const extractedText = data.data;
-        textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${extractedText}</div>`;
-        loaderNode.style.display = 'none'; // hide the loader
-        
-        // Now, use the extracted text to interact with the GPT chatbot
-        // Assuming your chatbot function accepts a message parameter
-        initializeChat(extractedText);
-    }
-};
+let textBoxNode;
+let loaderNode;
 
 document.addEventListener('DOMContentLoaded', () => {
+    textBoxNode = document.getElementById('textbox');
+    loaderNode = document.getElementById('loader');
+    
+    const worker = new Worker('./worker.js', { type: 'module' });
+
+    worker.onmessage = (event) => {
+        const data = event.data;
+
+        if (data.type === 'result' && data.task === 'image-to-text') {
+            const extractedText = data.data;
+            textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${extractedText}</div>`;
+            loaderNode.style.display = 'none'; // hide the loader
+            
+            // Now, use the extracted text to interact with the GPT chatbot
+            initializeChat(extractedText);
+        }
+    };
+
     const processImageBtn = document.getElementById("process-image");
     const imageUpload = document.getElementById("image-upload");
 
@@ -40,4 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
     });
+
+    initializeChat();
 });
