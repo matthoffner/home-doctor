@@ -2,6 +2,7 @@ import { initializeChat } from './chat.js';
 
 let textBoxNode;
 let loaderNode;
+let isChatInitialized = false;
 
 function appendImageToChat(base64Image) {
     const imgNode = document.createElement('img');
@@ -71,9 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
     
-        // Call initializeChat with the created prompt
-        if (promptMessage) {
+        if (promptMessage && !isChatInitialized) {
             initializeChat(promptMessage);
+            isChatInitialized = true;  // Set the flag to true to prevent further invocations
         }
     };
 
