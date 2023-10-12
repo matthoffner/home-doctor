@@ -1,10 +1,6 @@
-Got it. Here's the simplified README.md:
+## Home Doctor
 
----
-
-## Home Doctor Chatbot
-
-A simple web application allowing users to upload an image which is then processed and converted to text. The output is used as an input to an interactive chatbot powered by OpenAI's GPT-3.5 Turbo.
+A simple web application allowing users to upload an image which is then processed and converted to text. The output is used as an input to an interactive chatbot.
 
 ### Setup
 
