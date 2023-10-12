@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
                     worker.postMessage({
                         task: 'image-to-text',
-                        image: base64Image
+                        image: `data:image/jpeg;base64,${base64Image}`
                     });
                 };
                 imageElement.src = reader.result;
