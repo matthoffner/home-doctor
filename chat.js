@@ -5,6 +5,18 @@ export const initializeChat = (initialPrompt) => {
     const loaderNode = document.getElementById('loader');
     const textBoxNode = document.getElementById('textbox');
     const APIKEY = new URLSearchParams(window.location.search).get('apiKey'); // Fetching the API key from the query parameters
+    console.log(APIKEY);
+
+    const showChat = (type, message) => {
+        let chatContainerNode = document.createElement('div');
+        chatContainerNode.classList.add('message', type);
+        let chatText = document.createElement('p');
+        chatText.innerHTML = message;
+        chatContainerNode.appendChild(chatText);
+
+        textBoxNode.appendChild(chatContainerNode);
+        textBoxNode.scrollTop = textBoxNode.scrollHeight;
+    };
 
     if (!APIKEY) {
         showChat('error', 'Missing API Key in the URL');
@@ -21,17 +33,6 @@ export const initializeChat = (initialPrompt) => {
     if (initialPrompt) {
         sendBotMessage(initialPrompt);
     }
-
-    const showChat = (type, message) => {
-        let chatContainerNode = document.createElement('div');
-        chatContainerNode.classList.add('message', type);
-        let chatText = document.createElement('p');
-        chatText.innerHTML = message;
-        chatContainerNode.appendChild(chatText);
-
-        textBoxNode.appendChild(chatContainerNode);
-        textBoxNode.scrollTop = textBoxNode.scrollHeight;
-    };
 
     const sendBotMessage = async (msg) => {
         loaderNode.style.display = 'block';  // Display loader during processing
