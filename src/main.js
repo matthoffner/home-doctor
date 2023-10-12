@@ -44,11 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.type === 'result' && data.task === 'image-to-text') {
             const extractedText = data.data;
-            textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${extractedText}</div>`;
+            textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${JSON.stringify(extractedText)}</div>`;
             loaderNode.style.display = 'none'; // hide the loader
-            
-            // Now, use the extracted text to interact with the GPT chatbot
-            initializeChat(extractedText);
+            initializeChat(JSON.stringify(`Here is an image I uploaded, described as: ${JSON.stringify(extractedText)}`));
         }
     };
 
