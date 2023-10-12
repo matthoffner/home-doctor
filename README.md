@@ -1,14 +1,14 @@
-## Home Doctor
+## Photo Chat
 
-A simple web application allowing users to upload an image which is then processed and converted to text. The output is used as an input to an interactive chatbot.
+A simple web application allowing users to upload an image which is then processed and converted to text using transformer.js. The output is used as an input to an interactive chatbot.
 
 ### Setup
 
 1. **Clone the Repository**
 
     ```bash
-    git clone https://github.com/matthoffner/home-doctor
-    cd home-doctor
+    git clone https://github.com/matthoffner/photo-chat
+    cd photo-chat
     ```
 
 2. **Start the Development Server**

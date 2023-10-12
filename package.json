@@ -1,5 +1,5 @@
 {
-  "name": "home-doctor",
+  "name": "photo-chat",
   "version": "1.0.0",
   "description": "A simple web application allowing users to upload an image which is then processed and converted to text. The output is used as an input to an interactive chatbot.",
   "main": "main.js",
