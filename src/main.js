@@ -41,30 +41,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     worker.onmessage = (event) => {
         const data = event.data;
-
+    
         loaderNode.style.display = 'none'; // hide the loader
-
+    
+        let promptMessage = "";  // This will hold the message for the initializeChat function
+    
         switch(data.task) {
             case 'image-to-text':
-                const extractedText = data.data;
-                const generatedText = extractedText[0].generated_text;
+                const generatedText = data.data[0].generated_text;
                 textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${generatedText}</div>`;
-                if (generatedText) {
-                    initializeChat(`I've uploaded an image, I know you can't see but here is the image caption result: ${generatedText}, reply back with a helpful response from the caption I provided`);
-                }
+                promptMessage = `I've uploaded an image. Based on its content, the caption is: "${generatedText}". Can you help me understand more about it?`;
                 break;
-
+    
             case 'image-classification':
-                // Handle image classification results
                 const topClassification = data.data[0].label;
                 textBoxNode.innerHTML += `<div class="message received">Top classification: ${topClassification}</div>`;
+                promptMessage = `I've uploaded an image and it was classified as "${topClassification}". What can you tell me about this classification?`;
                 break;
-
+    
             case 'object-detection':
-                // Handle object detection results
-                const detectedObjects = data.data.map(obj => obj.label).join(', ');
-                textBoxNode.innerHTML += `<div class="message received">Detected objects: ${detectedObjects}</div>`;
+                if (data.data && data.data.length > 0) {
+                    const detectedObjects = data.data.map(obj => obj.label).join(', ');
+                    textBoxNode.innerHTML += `<div class="message received">Detected objects: ${detectedObjects}</div>`;
+                    promptMessage = `I've uploaded an image and detected the following objects: ${detectedObjects}. Can you provide more details or context about these?`;
+                } else {
+                    textBoxNode.innerHTML += `<div class="message received">No objects detected.</div>`;
+                    promptMessage = `I've uploaded an image, but couldn't detect any distinct objects in it. Can you provide some general insights or suggestions based on this?`;
+                }
                 break;
+        }
+    
+        // Call initializeChat with the created prompt
+        if (promptMessage) {
+            initializeChat(promptMessage);
         }
     };
 
