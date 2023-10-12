@@ -3,6 +3,15 @@ import { initializeChat } from './chat.js';
 let textBoxNode;
 let loaderNode;
 
+function appendImageToChat(base64Image) {
+    const imgNode = document.createElement('img');
+    imgNode.src = `data:image/jpeg;base64,${base64Image}`;
+    imgNode.alt = "Uploaded Image";
+    imgNode.className = "chat-image"; // Optional: Add a class for styling
+
+    textBoxNode.appendChild(imgNode);
+}
+
 function getImageDataFromImage(original) {
     // Helper function to get image data from image element
     const canvas = document.createElement('canvas');
@@ -55,6 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const imageElement = new Image();
                 imageElement.onload = () => {
                     const base64Image = getImageDataFromImage(imageElement).split(',')[1];
+    
+                    // Append the image to chat before sending it to the worker
+                    appendImageToChat(base64Image);
+    
                     worker.postMessage({
                         task: 'image-to-text',
                         image: base64Image
@@ -65,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
             reader.readAsDataURL(image);
         }
-    });
+    });    
     
 
     initializeChat();
