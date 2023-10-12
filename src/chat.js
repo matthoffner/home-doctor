@@ -5,7 +5,6 @@ export const initializeChat = (initialPrompt) => {
     const loaderNode = document.getElementById('loader');
     const textBoxNode = document.getElementById('textbox');
     const APIKEY = new URLSearchParams(window.location.search).get('apiKey'); // Fetching the API key from the query parameters
-    console.log(APIKEY);
 
     const showChat = (type, message) => {
         let chatContainerNode = document.createElement('div');
