@@ -1,5 +1,22 @@
 // chat.js
 
+let sendBotMessage; // Declare sendBotMessage here so that it can be accessed outside of initializeChat
+
+const worker = new Worker('./worker.js');
+
+worker.addEventListener('message', (event) => {
+    const { data } = event;
+    
+    if (data && data.type === 'result' && data.task === 'image-to-text') {
+        const extractedText = data.data; // The text extracted from the image
+        
+        // Use the extractedText as an initial prompt for the chatbot, if sendBotMessage is defined
+        if (sendBotMessage) {
+            sendBotMessage(extractedText);
+        }
+    }
+});
+
 export const initializeChat = (initialPrompt) => {
     const APIURL = 'https://api.openai.com/v1/chat/completions';
     const loaderNode = document.getElementById('loader');
