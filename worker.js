@@ -1,4 +1,4 @@
-import { pipeline, env } from "@xenova/transformers";
+import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.2";
 env.allowLocalModels = false;
 
 // Define task function mapping
