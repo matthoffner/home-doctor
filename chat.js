@@ -2,7 +2,7 @@
 
 let sendBotMessage; // Declare sendBotMessage here so that it can be accessed outside of initializeChat
 
-const worker = new Worker('./worker.js');
+const worker = new Worker('./worker.js', { type: 'module' });
 
 worker.addEventListener('message', (event) => {
     const { data } = event;

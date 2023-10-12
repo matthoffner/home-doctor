@@ -1,6 +1,6 @@
 import { initializeChat } from './chat.js';
 
-const worker = new Worker('worker.js');
+const worker = new Worker('./worker.js', { type: 'module' });
 
 let textBoxNode = document.getElementById('textbox');
 let loaderNode = document.getElementById('loader');
