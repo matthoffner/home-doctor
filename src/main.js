@@ -55,10 +55,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
     
             case 'image-classification':
-                const topClassification = data.data[0].label;
-                textBoxNode.innerHTML += `<div class="message received">Top classification: ${topClassification}</div>`;
-                promptMessage = `I've uploaded an image and it was classified as "${topClassification}". What can you tell me about this classification?`;
-                break;
+                if (data.data && data.data.length > 0) {
+                    const topClassification = data.data[0].label;
+                    textBoxNode.innerHTML += `<div class="message received">Top classification: ${topClassification}</div>`;
+                    promptMessage = `I've uploaded an image and it was classified as "${topClassification}". What can you tell me about this classification?`;
+                } else {
+                    textBoxNode.innerHTML += `<div class="message received">No classification results found.</div>`;
+                    promptMessage = `I've uploaded an image, but couldn't determine its classification. Can you provide some general insights or suggestions based on this?`;
+                }
+                break;      
     
             case 'object-detection':
                 if (data.data && data.data.length > 0) {
