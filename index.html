@@ -8,14 +8,14 @@
         body {
             font-family: 'Courier New', Courier, monospace;
             margin: 50px;
-            background-color: #fff;
-            color: #000;
+            background-color: #222;
+            color: #ddd;
         }
 
         h1 {
             font-size: 2em;
             letter-spacing: 5px;
-            border-bottom: 4px solid #000;
+            border-bottom: 4px solid #ddd;
             padding-bottom: 10px;
         }
 
@@ -23,7 +23,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 3px solid #000;
+            border: 3px solid #ddd;
             padding: 20px;
         }
 
@@ -31,17 +31,18 @@
             width: 100%;
             height: 50vh;
             overflow-y: scroll;
-            border: 3px solid #000;
+            overflow-x: hidden; /* Prevent side scrolling */
+            border: 3px solid #ddd;
             padding: 10px;
             margin-top: 20px;
+            background-color: #333;
         }
 
         .message {
-            width: 100%;
             margin: 10px 0;
             padding: 5px;
-            border: 2px solid #000;
-            background: transparent;
+            border: 2px solid #ddd;
+            background: #333;
         }
 
         .sent, .received {
@@ -50,36 +51,47 @@
 
         #send-button, #process-image {
             margin-top: 20px;
-            background-color: #000;
-            color: #fff;
+            background-color: #444;
+            color: #ddd;
             padding: 10px 20px;
-            border: none;
+            border: 2px solid #ddd;
             cursor: pointer;
         }
 
         #upload-section {
             margin: 20px 0;
-            border: 3px solid #000;
+            border: 3px solid #ddd;
             padding: 10px;
+            background-color: #333;
         }
 
         .chat-image {
             width: 100%;
             margin: 10px 0;
-            border: 3px solid #000;
+            border: 3px solid #ddd;
         }
 
-        input[type="text"], input[type="file"] {
+        input[type="text"] {
+            width: calc(100% - 26px); /* Adjusted to account for padding and border */
             padding: 10px;
-            border: 3px solid #000;
-            background: transparent;
+            border: 3px solid #ddd;
+            background: #333;
+            color: #ddd;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 3px solid #ddd;
+            background: #333;
+            color: #ddd;
         }
 
         #loader {
             font-size: 2em;
             letter-spacing: 3px;
             padding: 10px 20px;
-            border: 4px solid #000;
+            border: 4px solid #ddd;
+            background-color: #333;
         }
     </style>
 </head>
