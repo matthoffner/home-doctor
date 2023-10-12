@@ -1,6 +1,6 @@
 // chat.js
 
-export const initializeChat = (initialPrompt) => {
+export const initializeChat = async (initialPrompt) => {
     const APIURL = 'https://api.openai.com/v1/chat/completions';
     const loaderNode = document.getElementById('loader');
     const textBoxNode = document.getElementById('textbox');
@@ -69,7 +69,7 @@ export const initializeChat = (initialPrompt) => {
     };
 
     if (initialPrompt) {
-        sendBotMessage(initialPrompt);
+        await sendBotMessage(initialPrompt);
     }
 
     let sendButtonNode = document.getElementById('send-button');
