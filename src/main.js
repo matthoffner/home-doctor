@@ -41,9 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     worker.onmessage = (event) => {
+        console.log(event);
         const data = event.data;
 
-        if (data.type !== 'result') return;  // Only process 'result' type messages
+        if (data.type !== 'result' && data.type !== 'complete') return; 
     
         loaderNode.style.display = 'none'; // hide the loader
     
@@ -57,24 +58,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
     
             case 'image-classification':
-                if (data.data && data.data.length > 0) {
-                    const topClassification = data.data[0].label;
-                    textBoxNode.innerHTML += `<div class="message received">Top classification: ${topClassification}</div>`;
-                    promptMessage = `I've uploaded an image and it was classified as "${topClassification}". What can you tell me about this classification?`;
-                } else {
-                    textBoxNode.innerHTML += `<div class="message received">No classification results found.</div>`;
-                    promptMessage = `I've uploaded an image, but couldn't determine its classification. Can you provide some general insights or suggestions based on this?`;
+                if (data.type === 'complete') {
+                    if (data.data && data.data.length > 0) {
+                        const topClassification = data.data[0].label;
+                        textBoxNode.innerHTML += `<div class="message received">Top classification: ${topClassification}</div>`;
+                        promptMessage = `I've uploaded an image and it was classified as "${topClassification}". What can you tell me about this classification?`;
+                    } else {
+                        textBoxNode.innerHTML += `<div class="message received">No classification results found.</div>`;
+                        promptMessage = `I've uploaded an image, but couldn't determine its classification. Can you provide some general insights or suggestions based on this?`;
+                    }
                 }
                 break;      
     
             case 'object-detection':
-                if (data.data && data.data.length > 0) {
-                    const detectedObjects = data.data.map(obj => obj.label).join(', ');
-                    textBoxNode.innerHTML += `<div class="message received">Detected objects: ${detectedObjects}</div>`;
-                    promptMessage = `I've uploaded an image and detected the following objects: ${detectedObjects}. Can you provide more details or context about these?`;
-                } else {
-                    textBoxNode.innerHTML += `<div class="message received">No objects detected.</div>`;
-                    promptMessage = `I've uploaded an image, but couldn't detect any distinct objects in it. Can you provide some general insights or suggestions based on this?`;
+                if (data.type === 'complete') {
+                    if (data.data && data.data.length > 0) {
+                        const detectedObjects = data.data.map(obj => obj.label).join(', ');
+                        textBoxNode.innerHTML += `<div class="message received">Detected objects: ${detectedObjects}</div>`;
+                        promptMessage = `I've uploaded an image and detected the following objects: ${detectedObjects}. Can you provide more details or context about these?`;
+                    } else {
+                        textBoxNode.innerHTML += `<div class="message received">No objects detected.</div>`;
+                        promptMessage = `I've uploaded an image, but couldn't detect any distinct objects in it. Can you provide some general insights or suggestions based on this?`;
+                    }
                 }
                 break;
         }
