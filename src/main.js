@@ -43,50 +43,21 @@ document.addEventListener('DOMContentLoaded', () => {
     worker.onmessage = (event) => {
         const data = event.data;
     
-        if (data.type === 'download') {
-            console.log("Downloading model:", data.data);
-            loaderNode.style.display = 'block';
-            return;  // Don't process further if it's just a download message.
-        }
-    
-        loaderNode.style.display = 'none'; // hide the loader once processing is done
+        
     
         let promptMessage = "";  // This will hold the message for the initializeChat function
-        
-        switch(data.task) {
-            case 'image-to-text':
-                const generatedText = data.data[0].generated_text;
-                textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${generatedText}</div>`;
-                promptMessage = `I've uploaded an image. Based on its content, the caption is: "${generatedText}". Can you help me understand more about it?`;
-                break;
-        
-            case 'image-classification':
-                if (data.type === 'complete') {
-                    if (data.data && data.data.length > 0) {
-                        const topClassification = data.data.map(obj => obj.label).join(', ');
-                        textBoxNode.innerHTML += `<div class="message received">Top classification: ${topClassification}</div>`;
-                        promptMessage = `I've uploaded an image and it was classified as "${topClassification}". What can you tell me about this classification?`;
-                    } else {
-                        textBoxNode.innerHTML += `<div class="message received">No classification results found.</div>`;
-                        promptMessage = `I've uploaded an image, but couldn't determine its classification. Can you provide some general insights or suggestions based on this?`;
-                    }
-                }
-                break;      
-        
-            case 'object-detection':
-                if (data.type === 'complete') {
-                    if (data.data && data.data.length > 0) {
-                        const detectedObjects = data.data.map(obj => obj.label).join(', ');
-                        textBoxNode.innerHTML += `<div class="message received">Detected objects: ${detectedObjects}</div>`;
-                        promptMessage = `I've uploaded an image and detected the following objects: ${detectedObjects}. Can you provide more details or context about these?`;
-                    } else {
-                        textBoxNode.innerHTML += `<div class="message received">No objects detected.</div>`;
-                        promptMessage = `I've uploaded an image, but couldn't detect any distinct objects in it. Can you provide some general insights or suggestions based on this?`;
-                    }
-                }
-                break;
+    
+        if (data.type === 'result' && data.data && data.data.length > 0 && data.data[0].hasOwnProperty('generated_text')) {
+            const generatedText = data.data[0].generated_text;
+            textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${generatedText}</div>`;
+            promptMessage = `I've uploaded an image. Based on its content, the caption is: "${generatedText}". Can you help me understand more about it?`;
+        } else if (data.type === 'complete' && data.data && data.data.length > 0 && data.data[0].hasOwnProperty('label')) {
+            const labels = data.data.map(obj => obj.label).join(', ');
+            textBoxNode.innerHTML += `<div class="message received">Classifications: ${labels}</div>`;
+            promptMessage = `I've uploaded an image and it was classified as: "${labels}". What can you tell me about these classifications?`;
         }
-        
+    
+        // If there's a prompt message and chat isn't initialized, then initialize the chat
         if (promptMessage && !isChatInitialized) {
             initializeChat(promptMessage);
             isChatInitialized = true;  // Set the flag to true to prevent further invocations
