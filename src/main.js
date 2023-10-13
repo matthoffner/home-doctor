@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'image-classification':
                 if (data.type === 'complete') {
                     if (data.data && data.data.length > 0) {
-                        const topClassification = data.data[0].label;
+                        const topClassification = data.data.map(obj => obj.label).join(', ');
                         textBoxNode.innerHTML += `<div class="message received">Top classification: ${topClassification}</div>`;
                         promptMessage = `I've uploaded an image and it was classified as "${topClassification}". What can you tell me about this classification?`;
                     } else {
