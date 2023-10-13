@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     worker.onmessage = (event) => {
         const data = event.data;
+
+        if (data.type !== 'result') return;  // Only process 'result' type messages
     
         loaderNode.style.display = 'none'; // hide the loader
     
@@ -88,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskSelect = document.getElementById("task-select"); // Assuming you have a dropdown with this ID to select the task
 
     processImageBtn.addEventListener('click', async () => {
+        isChatInitialized = false;
         if (imageUpload.files.length > 0) {
             loaderNode.style.display = 'block'; // show loader
 
