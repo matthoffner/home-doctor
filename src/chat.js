@@ -1,5 +1,13 @@
 // chat.js
 
+
+let conversation = [
+    {
+        role: 'system',
+        content: 'This is a photo chat. Users will upload images and expect the model to provide insights, classifications, or descriptions. Assist them based on the provided image content or related queries.',
+    },
+];
+
 export const initializeChat = async (initialPrompt) => {
     const APIURL = 'https://api.openai.com/v1/chat/completions';
     const loaderNode = document.getElementById('loader');
@@ -21,13 +29,6 @@ export const initializeChat = async (initialPrompt) => {
         showChat('error', 'Missing API Key in the URL');
         return;
     }
-
-    let conversation = [
-        {
-            role: 'system',
-            content: 'How are you today? Please ask me anything',
-        },
-    ];
 
     const sendBotMessage = async (msg) => {
         loaderNode.style.display = 'block';  // Display loader during processing
