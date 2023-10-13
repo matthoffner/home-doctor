@@ -41,22 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     worker.onmessage = (event) => {
-        console.log(event);
         const data = event.data;
-
-        if (data.type !== 'result' && data.type !== 'complete') return; 
     
-        loaderNode.style.display = 'none'; // hide the loader
+        if (data.type === 'download') {
+            console.log("Downloading model:", data.data);
+            return;  // Don't process further if it's just a download message.
+        }
+    
+        loaderNode.style.display = 'none'; // hide the loader once processing is done
     
         let promptMessage = "";  // This will hold the message for the initializeChat function
-    
+        
         switch(data.task) {
             case 'image-to-text':
                 const generatedText = data.data[0].generated_text;
                 textBoxNode.innerHTML += `<div class="message received">Extracted from image: ${generatedText}</div>`;
                 promptMessage = `I've uploaded an image. Based on its content, the caption is: "${generatedText}". Can you help me understand more about it?`;
                 break;
-    
+        
             case 'image-classification':
                 if (data.type === 'complete') {
                     if (data.data && data.data.length > 0) {
@@ -69,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 break;      
-    
+        
             case 'object-detection':
                 if (data.type === 'complete') {
                     if (data.data && data.data.length > 0) {
@@ -83,12 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 break;
         }
-    
+        
         if (promptMessage && !isChatInitialized) {
             initializeChat(promptMessage);
             isChatInitialized = true;  // Set the flag to true to prevent further invocations
         }
     };
+    
 
     const processImageBtn = document.getElementById("process-image");
     const imageUpload = document.getElementById("image-upload");
