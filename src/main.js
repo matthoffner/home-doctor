@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         if (data.type === 'download') {
             console.log("Downloading model:", data.data);
+            loaderNode.style.display = 'block';
             return;  // Don't process further if it's just a download message.
         }
     
