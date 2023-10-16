@@ -1,6 +1,5 @@
 // chat.js
 
-
 let conversation = [
     {
         role: 'system',
@@ -9,10 +8,15 @@ let conversation = [
 ];
 
 export const initializeChat = async (initialPrompt) => {
-    const APIURL = 'https://api.openai.com/v1/chat/completions';
+    const defaultAPIURL = 'https://api.openai.com/v1/chat/completions';
+    
+    // Fetch the base URL and API key from the query parameters
+    const queryParams = new URLSearchParams(window.location.search);
+    const APIURL = queryParams.get('baseURL') || defaultAPIURL;  
+    const APIKEY = queryParams.get('apiKey');
+
     const loaderNode = document.getElementById('loader');
     const textBoxNode = document.getElementById('textbox');
-    const APIKEY = new URLSearchParams(window.location.search).get('apiKey'); // Fetching the API key from the query parameters
 
     const showChat = (type, message) => {
         let chatContainerNode = document.createElement('div');
@@ -25,7 +29,8 @@ export const initializeChat = async (initialPrompt) => {
         textBoxNode.scrollTop = textBoxNode.scrollHeight;
     };
 
-    if (!APIKEY) {
+    // Check if no API key and the default URL is being used
+    if (!APIKEY && APIURL === defaultAPIURL) {
         showChat('error', 'Missing API Key in the URL');
         return;
     }
@@ -39,13 +44,19 @@ export const initializeChat = async (initialPrompt) => {
         };
         conversation.push(message);
 
+        let headers = {
+            'Content-Type': 'application/json'
+        };
+
+        // Only add Authorization header if APIKEY is present
+        if (APIKEY) {
+            headers['Authorization'] = `Bearer ${APIKEY}`;
+        }
+
         try {
             let chatResponse = await fetch(APIURL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${APIKEY}`,
-                },
+                headers: headers,
                 body: JSON.stringify({
                     model: 'gpt-4',
                     messages: conversation,
